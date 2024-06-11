@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .item img {
+            max-width: 100px;
+            margin-right: 20px;
+        }
+
+        .item p {
+            margin: 0;
+        }
+
+        .quantity {
+            margin-right: 10px;
+        }
+
+        .delete {
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #totalAmount {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .invoice {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #000;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .invoice-header,
+        .invoice-body,
+        .invoice-footer {
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .invoice-header h2,
+        .invoice-body h3 {
+            margin: 0;
+        }
+
+        .invoice-body p {
+            margin: 5px 0;
+        }
+
+        .invoice-footer p {
+            margin: 5px 0;
+        }
+
+        .total-amount {
+            font-weight: bold;
+        }
+
+        .buy-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .buy-button:hover {
+            background-color: darkgreen;
+        }
+
+        .payment-options, .address-confirmation, .order-confirmation {
+            display: none;
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-options h3, .address-confirmation h3, .order-confirmation h3 {
+            margin-top: 0;
+        }
+
+        .payment-options label, .address-confirmation label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .payment-options button, .address-confirmation button, .order-confirmation button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .payment-options button:hover, .address-confirmation button:hover, .order-confirmation button:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Shopping Cart</h1>
+</header>
+
+<div class="container" id="cartItems">
+    <!-- Cart items will be dynamically added here -->
+</div>
+
+<div id="totalAmount"></div>
+
+<div class="invoice" id="invoice">
+    <div class="invoice-header">
+        <h2>Invoice</h2>
+        <p id="current-date"></p>
+        <p>Invoice Number: INV-12345</p>
+    </div>
+
+    <div class="invoice-body" id="invoiceBody">
+        <h3>Items Purchased</h3>
+        <!-- Items will be dynamically added here -->
+    </div>
+
+    <div class="invoice-footer">
+        <p id="subtotal"></p>
+        <p id="tax"></p>
+        <p class="total-amount" id="totalInvoiceAmount"></p>
+    </div>
+</div>
+
+<!-- Proceed to Buy Button -->
+<button class="buy-button" id="proceedToBuy">Proceed to Buy</button>
+
+<!-- Payment Options -->
+<div class="payment-options" id="paymentOptions">
+    <h3>Select Payment Method</h3>
+    <label>
+        <input type="radio" name="paymentMethod" value="UPI"> Pay via UPI
+    </label>
+    <label>
+        <input type="radio" name="paymentMethod" value="Card"> Pay via Debit or Credit Card
+    </label>
+    <label>
+        <input type="radio" name="paymentMethod" value="COD"> Cash on Delivery
+    </label>
+    <button id="payNow">Pay Now</button>
+</div>
+
+<!-- Address Confirmation -->
+<div class="address-confirmation" id="addressConfirmation">
+    <h3>Confirm Your Address</h3>
+    <label>
+        Address: <input type="text" id="address" placeholder="Enter your address">
+    </label>
+    <button id="confirmAddress">Confirm Address</button>
+</div>
+
+<!-- Order Confirmation -->
+<div class="order-confirmation" id="orderConfirmation">
+    <h3>Order Confirmation</h3>
+    <p id="orderDetails"></p>
+    <button id="placeOrder">Place Order</button>
+</div>
+
+<script>
+    // Retrieve cart items from localStorage
+    var cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Define the prices for each item in rupees
+    var itemPrices = {
+        Dress: 1640,
+        Sunglasses: 410,
+        Hat: 250,
+        Handbag: 820,
+        Watch: 6500,
+        Laptop: 55000,
+        Smartphone: 63999,
+        Tablet: 24600,
+        Headphones: 3200,
+        // Add electronic items if needed
+    };
+
+    // Get the container elements
+    var cartContainer = document.getElementById('cartItems');
+    var invoiceBody = document.getElementById('invoiceBody');
+    
+    // Function to update bill details
+    function updateBill() {
+        // Clear previous bill details
+        invoiceBody.innerHTML = '<h3>Items Purchased</h3>';
+        
+        var totalAmount = 0;
+        var totalItems = 0;
+        
+        cartItems.forEach(function(item, index) {
+            var quantity = parseInt(document.querySelectorAll('.quantity')[index].value);
+            var total = quantity * itemPrices[item.name];
+            totalAmount += total;
+            totalItems += quantity;
+            var invoiceItem = '<p>' + item.name + ' - ₹' + (itemPrices[item.name] * quantity).toFixed(2) + ' (' + quantity + ' @ ₹' + itemPrices[item.name].toFixed(2) + ' each)</p>';
+            invoiceBody.insertAdjacentHTML('beforeend', invoiceItem);
+        });
+
+        var tax = totalAmount * 0.10;
+        var finalAmount = totalAmount + tax;
+
+        document.getElementById('totalAmount').textContent = 'Total Amount: ₹' + totalAmount.toFixed(2) + ' (Total Items: ' + totalItems + ')';
+        document.getElementById('subtotal').textContent = 'Subtotal: ₹' + totalAmount.toFixed(2);
+        document.getElementById('tax').textContent = 'Tax (10%): ₹' + tax.toFixed(2);
+        document.getElementById('totalInvoiceAmount').textContent = 'Total Amount: ₹' + finalAmount.toFixed(2);
+    }
+
+    // Loop through each item in the cart and dynamically generate HTML to display them
+    cartItems.forEach(function(item, index) {
+        // Check if the item is defined and has a price
+        if (item && itemPrices[item.name]) {
+            var itemElement = document.createElement('div');
+            itemElement.classList.add('item');
+            
+            // Create an image element
+            var imgElement = document.createElement('img');
+            imgElement.src = item.image;
+            imgElement.alt = item.name;
+            itemElement.appendChild(imgElement);
+            
+            // Create a paragraph element for item name
+            var pElement = document.createElement('p');
+            pElement.textContent = item.name;
+            itemElement.appendChild(pElement);
+
+            // Create a paragraph element for item price
+            var priceElement = document.createElement('p');
+            priceElement.textContent = 'Price: ₹' + itemPrices[item.name].toFixed(2);
+            itemElement.appendChild(priceElement);
+            
+            // Create input element for quantity
+            var quantityInput = document.createElement('input');
+            quantityInput.type = 'number';
+            quantityInput.value = 1; // Default quantity
+            quantityInput.min = 1;
+            quantityInput.classList.add('quantity');
+            quantityInput.addEventListener('input', function() {
+                updateBill();
+            });
+            itemElement.appendChild(quantityInput);
+            
+            // Create delete button
+            var deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.classList.add('delete');
+            deleteButton.onclick = function() {
+                // Remove the item from the cart
+                cartItems.splice(index, 1);
+                // Update localStorage
+                localStorage.setItem('cart', JSON.stringify(cartItems));
+                // Remove the item from the UI
+                cartContainer.removeChild(itemElement);
+                // Update total amount
+                updateBill();
+            };
+            itemElement.appendChild(deleteButton);
+            
+            // Append the item element to the container
+            cartContainer.appendChild(itemElement);
+        }
+    });
+
+    // Call the function to initially display the total amount and bill
+    updateBill();
+
+    // Get the current date and time
+    var currentDate = new Date();
+    var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    var timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    var formattedDate = currentDate.toLocaleDateString('en-US', dateOptions);
+    var formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
+
+    // Update the current date and time in the invoice
+    document.getElementById('current-date').textContent = 'Date: ' + formattedDate + ', Time: ' + formattedTime;
+
+    // Proceed to Buy button event listener
+    document.getElementById('proceedToBuy').addEventListener('click', function() {
+        document.getElementById('paymentOptions').style.display = 'block';
+    });
+
+    // Pay Now button event listener
+    document.getElementById('payNow').addEventListener('click', function() {
+        var selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        if (selectedPaymentMethod) {
+            document.getElementById('paymentOptions').style.display = 'none';
+            document.getElementById('addressConfirmation').style.display = 'block';
+        } else {
+            alert('Please select a payment method.');
+        }
+    });
+
+    // Confirm Address button event listener
+    document.getElementById('confirmAddress').addEventListener('click', function() {
+        var address = document.getElementById('address').value;
+        if (address) {
+            document.getElementById('addressConfirmation').style.display = 'none';
+            document.getElementById('orderConfirmation').style.display = 'block';
+            document.getElementById('orderDetails').textContent = 'Address: ' + address + ', Payment Method: ' + document.querySelector('input[name="paymentMethod"]:checked').value;
+        } else {
+            alert('Please enter your address.');
+        }
+    });
+
+    // Place Order button event listener
+    document.getElementById('placeOrder').addEventListener('click', function() {
+        var deliveryDate = new Date();
+        deliveryDate.setDate(deliveryDate.getDate() + 2);
+        var deliveryOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        var formattedDeliveryDate = deliveryDate.toLocaleDateString('en-US', deliveryOptions);
+        alert('Order placed successfully! Your order will be delivered on ' + formattedDeliveryDate);
+        // Clear the cart and update localStorage
+        cartItems = [];
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+        // Clear the UI
+        cartContainer.innerHTML = '';
+        updateBill();
+    });
+</script>
+
+</body>
+</html>

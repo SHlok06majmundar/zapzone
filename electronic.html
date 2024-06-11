@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronic Items</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .item {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 20px;
+            width: calc(33.33% - 20px);
+            max-width: 300px;
+        }
+        .item img {
+            max-width: 100%;
+            height: auto;
+        }
+        .item h2 {
+            margin-top: 0;
+        }
+        .item a {
+            text-decoration: none;
+            color: inherit; 
+            display: block; 
+        }
+        .buy-now {
+            background-color: green;
+            color: white;
+        }
+        .add-to-cart {
+            background-color: orange;
+            color: white;
+        }
+        .buy-now, .add-to-cart {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .item .amount {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Electronic Items</h1>
+    </header>
+    <div class="container">
+        <div class="item">
+            <img src="laptop.webp" alt="Laptop">
+            <h2>Laptop</h2>
+            <p>A portable computer</p>
+            <p class="amount">₹55,000</p>
+            <input type="number" value="1" min="1" max="10">
+            <button class="buy-now" onclick="addToCart('Laptop', 55000)">Buy Now</button>
+            <button class="add-to-cart" onclick="addToCart('Laptop', 55000, 'laptop.webp')">Add to Cart</button>
+        </div>
+        <div class="item">
+            <img src="smartphone.webp" alt="Smartphone">
+            <h2>Smartphone</h2>
+            <p>A mobile phone with advanced features</p>
+            <p class="amount">₹63,999</p>
+            <input type="number" value="1" min="1" max="10">
+            <button class="buy-now" onclick="addToCart('Smartphone', 63999)">Buy Now</button>
+            <button class="add-to-cart" onclick="addToCart('Smartphone', 63999, 'smartphone.webp')">Add to Cart</button>
+        </div>
+        <div class="item">
+            <img src="tablet.webp" alt="Tablet">
+            <h2>Tablet</h2>
+            <p>A portable, touch-screen computing device</p>
+            <p class="amount">₹24,600</p>
+            <input type="number" value="1" min="1" max="10">
+            <button class="buy-now" onclick="addToCart('Tablet', 24600)">Buy Now</button>
+            <button class="add-to-cart" onclick="addToCart('Tablet', 24600, 'tablet.webp')">Add to Cart</button>
+        </div>
+        <div class="item">
+            <img src="headphone.webp" alt="Headphones">
+            <h2>Headphones</h2>
+            <p>Audio output devices worn on the head</p>
+            <p class="amount">₹3,200</p>
+            <input type="number" value="1" min="1" max="10">
+            <button class="buy-now" onclick="addToCart('Headphones', 3200)">Buy Now</button>
+            <button class="add-to-cart" onclick="addToCart('Headphones', 3200, 'headphone.webp')">Add to Cart</button>
+        </div>
+    </div>
+
+    <script>
+        function addToCart(itemName, itemAmount, itemImage) {
+            // Get the current cart items from localStorage or initialize an empty array
+            var cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Add the selected item to the cart along with amount and image source
+            cartItems.push({ name: itemName, amount: itemAmount, image: itemImage });
+            
+            // Store the updated cart items back to localStorage
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            
+            // Redirect to cart.html
+            window.location.href = 'cart.html';
+        }
+    </script>
+</body>
+</html>

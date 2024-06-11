@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Items</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px;
+            max-width: 1000px; 
+            margin: 0 auto;
+        }
+
+        .item {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            width: calc(50% - 20px);
+            padding: 20px;
+            box-sizing: border-box; 
+        }
+
+        .item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .item h2 {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        .item p {
+            color: #666;
+        }
+        
+        .item a {
+            text-decoration: none;
+            color: inherit; 
+            display: block;
+        }
+
+        .buy-now, .add-to-cart {
+            cursor: pointer;
+            text-align: center;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .buy-now {
+            background-color: green;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .add-to-cart {
+            background-color: orange;
+            color: #fff;
+            padding: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .item {
+                width: calc(100% - 20px); 
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Fashion Items</h1>
+</header>
+
+<div class="container">
+    <div class="item">
+        <img src="dress.webp" alt="Fashion Item">
+        <h2>Dress</h2>
+        <p>A beautiful dress for any occasion.</p>
+        <button class="buy-now" onclick="addToCart('Dress', 'dress.webp', 200)">Buy Now</button>
+        <button class="add-to-cart" onclick="addToCart('Dress', 'dress.webp', 200)">Add to Cart</button>
+    </div>
+
+    <div class="item">
+        <img src="sunglass.webp" alt="Fashion Item">
+        <h2>Sunglasses</h2>
+        <p>Stylish sunglasses to protect your eyes.</p>
+        <button class="buy-now" onclick="addToCart('Sunglasses', 'sunglass.webp', 50)">Buy Now</button>
+        <button class="add-to-cart" onclick="addToCart('Sunglasses', 'sunglass.webp', 50)">Add to Cart</button>
+    </div>
+
+    <div class="item">
+        <img src="hat.webp" alt="Fashion Item">
+        <h2>Hat</h2>
+        <p>Stylish hat to accessorize your look.</p>
+        <button class="buy-now" onclick="addToCart('Hat', 'hat.webp', 30)">Buy Now</button>
+        <button class="add-to-cart" onclick="addToCart('Hat', 'hat.webp', 30)">Add to Cart</button>
+    </div>
+
+    <div class="item">
+        <img src="handbag.webp" alt="Fashion Item">
+        <h2>Handbag</h2>
+        <p>Stylish handbag to carry your essentials.</p>
+        <button class="buy-now" onclick="addToCart('Handbag', 'handbag.webp', 100)">Buy Now</button>
+        <button class="add-to-cart" onclick="addToCart('Handbag', 'handbag.webp', 100)">Add to Cart</button>
+    </div>
+
+    <div class="item">
+        <img src="watch.webp" alt="Fashion Item">
+        <h2>Watch</h2>
+        <p>Elegant watch to keep track of time.</p>
+        <button class="buy-now" onclick="addToCart('Watch', 'watch.webp', 80)">Buy Now</button>
+        <button class="add-to-cart" onclick="addToCart('Watch', 'watch.webp', 80)">Add to Cart</button>
+    </div>
+</div>
+
+<script>
+function addToCart(itemName, itemImage, itemPrice) {
+    // Get the current cart items from localStorage or initialize an empty array
+    var cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Add the selected item to the cart along with its details
+    cartItems.push({name: itemName, image: itemImage, price: itemPrice});
+
+    // Store the updated cart items back to localStorage
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+
+    // Redirect to cart.html
+    window.location.href = 'cart.html';
+}
+</script>
+
+</body>
+</html>
